@@ -1,4 +1,4 @@
 py-cord --pre
 googletrans==4.0.0rc1
-dotenv
+python-dotenv
 emoji
