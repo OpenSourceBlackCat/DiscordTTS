@@ -3,6 +3,7 @@ from discord import Intents, FFmpegPCMAudio
 from dotenv import load_dotenv
 from queue import Queue
 load_dotenv()
+from re import sub
 from gtts import gTTS
 from os import getenv
 AmeyaBot = Bot(intents=Intents.all())
@@ -11,6 +12,7 @@ _OWNER=getenv("OWNER")
 _LAST_SPOKEN_USER = ""
 _AUDIO_QUEUE = Queue()
 _AUDIO_FILE = "meow.mp3"
+_REGEX = r"<(\w+)?:(\w+):(\d+)>"
 class TTS:
     async def talk(text):
         textClient = gTTS(text=text, lang="hi")
@@ -34,7 +36,7 @@ class TTS:
                     await voiceClient.disconnect()
                 await ctx.respond("Disconnected Miaw!")
     @AmeyaBot.event
-    async def on_read():
+    async def on_ready():
         print("BlackCat's TTS BOT Running.")
     @AmeyaBot.event
     async def on_message(ctx):
@@ -45,6 +47,7 @@ class TTS:
                 if(Auth_User.voice.channel.id==ctx.channel.id):
                     for mention in ctx.mentions:
                         ctx.content = ctx.content.replace(f"<@{mention.id}>", mention.name)
+                    ctx.content = sub(_REGEX, "Emoji", ctx.content)
                     if(_LAST_SPOKEN_USER==ctx.author.name):
                         await TTS.talk(ctx.content)
                     else:
