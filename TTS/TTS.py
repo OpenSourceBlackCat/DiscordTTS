@@ -1,25 +1,30 @@
 from discord.ext.commands import Bot
 from discord import Intents, FFmpegPCMAudio
+from emoji import distinct_emoji_list, demojize
+from googletrans import Translator
 from dotenv import load_dotenv
-from queue import Queue
-load_dotenv()
-from re import sub
 from gtts import gTTS
 from os import getenv
+from re import sub
+load_dotenv()
 AmeyaBot = Bot(intents=Intents.all())
 _GUILD=getenv("GUILD")
 _OWNER=getenv("OWNER")
 _LAST_SPOKEN_USER = ""
-_AUDIO_QUEUE = Queue()
 _AUDIO_FILE = "meow.mp3"
 _REGEX = r"<(\w+)?:(\w+):(\d+)>"
+_TRANSLATOR = Translator()
 class TTS:
     async def talk(text):
         textClient = gTTS(text=text, lang="hi")
         textClient.save("meow.mp3")
         for voiceClient in AmeyaBot.voice_clients:
-            _AUDIO_QUEUE.put(FFmpegPCMAudio(_AUDIO_FILE))
-            voiceClient.play(_AUDIO_QUEUE.get())
+            if voiceClient.is_playing():
+                try:
+                    voiceClient.play(FFmpegPCMAudio(_AUDIO_FILE))
+                except: pass
+            else:
+                voiceClient.play(FFmpegPCMAudio(_AUDIO_FILE))
     @AmeyaBot.slash_command(guild_ids=[_GUILD], description="Connect To The Channel.")
     async def meow(ctx):
         Auth_User = await ctx.guild.fetch_member(_OWNER)
@@ -48,6 +53,8 @@ class TTS:
                     for mention in ctx.mentions:
                         ctx.content = ctx.content.replace(f"<@{mention.id}>", mention.name)
                     ctx.content = sub(_REGEX, "Emoji", ctx.content)
+                    for emoji in distinct_emoji_list(ctx.content):
+                        ctx.content = ctx.content.replace(emoji, _TRANSLATOR.translate(text=str(demojize(emoji)).replace("_", " "), dest="hi").text)
                     if(_LAST_SPOKEN_USER==ctx.author.name):
                         await TTS.talk(ctx.content)
                     else:
