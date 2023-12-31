@@ -52,8 +52,7 @@ class TTS:
             if(Auth_User.voice):
                 if(Auth_User.voice.channel.id==ctx.channel.id):
                     for mention in ctx.mentions:
-                        mentionedUser = await ctx.guild.fetch_member(mention.id)
-                        ctx.content = ctx.content.replace(f"<@{mention.id}>", mentionedUser.nick)
+                        ctx.content = ctx.content.replace(f"<@{mention.id}>", mention.name)
                     if(len(findall(_REGEX_LINK, ctx.content))):
                         ctx.content = sub(_REGEX_LINK, "Link", ctx.content)
                     ctx.content = sub(_REGEX_EMOJI, "Emoji", ctx.content)
