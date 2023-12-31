@@ -13,7 +13,7 @@ _OWNER=getenv("OWNER")
 _LAST_SPOKEN_USER = ""
 _AUDIO_FILE = "meow.mp3"
 _REGEX_EMOJI = r"<(\w+)?:(\w+):(\d+)>"
-_REGEX_LINK = r""
+_REGEX_LINK = r"(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])"
 _TRANSLATOR = Translator()
 class TTS:
     async def talk(text):
@@ -53,7 +53,7 @@ class TTS:
                 if(Auth_User.voice.channel.id==ctx.channel.id):
                     for mention in ctx.mentions:
                         ctx.content = ctx.content.replace(f"<@{mention.id}>", mention.nick)
-                    if(findall(_REGEX_LINK, ctx.content)):
+                    if(len(findall(_REGEX_LINK, ctx.content))):
                         ctx.content = sub(_REGEX_LINK, "Link", ctx.content)
                     ctx.content = sub(_REGEX_EMOJI, "Emoji", ctx.content)
                     for emoji in distinct_emoji_list(ctx.content):
