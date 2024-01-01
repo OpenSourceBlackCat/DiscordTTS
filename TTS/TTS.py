@@ -56,18 +56,19 @@ class TTS:
     async def on_message(ctx):
         global _LAST_SPOKEN_USER
         if (not ctx.author.bot and AmeyaBot.voice_clients):
-            for mention in ctx.mentions:
-                ctx.content = ctx.content.replace(f"<@{mention.id}>", mention.name)
-            if(len(findall(_REGEX_LINK, ctx.content))):
-                ctx.content = sub(_REGEX_LINK, "Link", ctx.content)
-            ctx.content = sub(_REGEX_EMOJI, "Emoji", ctx.content)
-            for emoji in distinct_emoji_list(ctx.content):
-                ctx.content = ctx.content.replace(emoji, _TRANSLATOR.translate(text=str(demojize(emoji)).replace("_", " "), dest="hi").text)
-            if(_LAST_SPOKEN_USER==ctx.author.name):
-                await TTS.talk(ctx.content)
-            else:
-                if(ctx.author.nick):
-                    await TTS.talk(f"{ctx.author.nick} Says {ctx.content}")
+            if(ctx.author.voice.channel.id==ctx.channel.id):
+                for mention in ctx.mentions:
+                    ctx.content = ctx.content.replace(f"<@{mention.id}>", mention.name)
+                if(len(findall(_REGEX_LINK, ctx.content))):
+                    ctx.content = sub(_REGEX_LINK, "Link", ctx.content)
+                ctx.content = sub(_REGEX_EMOJI, "Emoji", ctx.content)
+                for emoji in distinct_emoji_list(ctx.content):
+                    ctx.content = ctx.content.replace(emoji, _TRANSLATOR.translate(text=str(demojize(emoji)).replace("_", " "), dest="hi").text)
+                if(_LAST_SPOKEN_USER==ctx.author.name):
+                    await TTS.talk(ctx.content)
                 else:
-                    await TTS.talk(f"{ctx.author.name} Says {ctx.content}")
-            _LAST_SPOKEN_USER = ctx.author.name
+                    if(ctx.author.nick):
+                        await TTS.talk(f"{ctx.author.nick} Says {ctx.content}")
+                    else:
+                        await TTS.talk(f"{ctx.author.name} Says {ctx.content}")
+                _LAST_SPOKEN_USER = ctx.author.name
