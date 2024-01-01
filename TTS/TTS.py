@@ -55,7 +55,7 @@ class TTS:
     @AmeyaBot.event
     async def on_message(ctx):
         global _LAST_SPOKEN_USER
-        if (not ctx.author.bot and AmeyaBot.voice_clients):
+        if (not ctx.author.bot and AmeyaBot.voice_clients[0].channel.id==ctx.channel.id):
             if(ctx.author.voice.channel.id==ctx.channel.id):
                 for mention in ctx.mentions:
                     ctx.content = ctx.content.replace(f"<@{mention.id}>", mention.name)
@@ -72,3 +72,5 @@ class TTS:
                     else:
                         await TTS.talk(f"{ctx.author.name} Says {ctx.content}")
                 _LAST_SPOKEN_USER = ctx.author.name
+            else:
+                await ctx.channel.send("You're Not Connected To The Authorised Channel.")
