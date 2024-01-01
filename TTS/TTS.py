@@ -33,6 +33,8 @@ class TTS:
             if(Auth_User.voice.channel.id==ctx.channel.id):
                 meow = await Auth_User.voice.channel.connect()
                 await ctx.respond("Connected Meow!")
+            else:
+                await ctx.respond("The Authorised Admin Is Not Connected To The Channel.")
     @AmeyaBot.slash_command(guild_ids=[_GUILD], description="Disconnect From The Channel.")
     async def miaw(ctx):
         Auth_User = await ctx.guild.fetch_member(_OWNER)
