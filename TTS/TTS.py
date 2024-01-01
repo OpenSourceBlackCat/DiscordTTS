@@ -68,3 +68,5 @@ class TTS:
                         else:
                             await TTS.talk(f"{ctx.author.name} Says {ctx.content}")
                     _LAST_SPOKEN_USER = ctx.author.name
+        else:
+            await ctx.channel.send("The Authorised Admin Is Not Connected To The Channel.")
