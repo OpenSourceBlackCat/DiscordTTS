@@ -28,7 +28,7 @@ class TTS:
                 voiceClient.play(FFmpegPCMAudio(_AUDIO_FILE))
     @AmeyaBot.slash_command(guild_ids=_GUILD, description="Connect To The Channel.")
     async def meow(ctx):
-        if(ctx.author.id in _AUTH_PERSON):
+        if(str(ctx.author.id) in _AUTH_PERSON):
             if(ctx.author.voice):
                 if(ctx.author.voice.channel.id==ctx.channel.id):
                     meow = await ctx.author.voice.channel.connect()
@@ -39,7 +39,7 @@ class TTS:
             await ctx.respond("You're Not Authorised To Operate This Bot!")
     @AmeyaBot.slash_command(guild_ids=_GUILD, description="Disconnect From The Channel.")
     async def miaw(ctx):
-        if(ctx.author.id in _AUTH_PERSON):
+        if(str(ctx.author.id) in _AUTH_PERSON):
             if(ctx.author.voice):
                 if(ctx.author.voice.channel.id==ctx.channel.id):
                     for voiceClient in AmeyaBot.voice_clients:
@@ -56,7 +56,7 @@ class TTS:
     async def on_message(ctx):
         global _LAST_SPOKEN_USER
         if (not ctx.author.bot and AmeyaBot.voice_clients):
-            if(ctx.author.id in _AUTH_PERSON):
+            if(str(ctx.author.id) in _AUTH_PERSON):
                 if(ctx.author.voice):
                     if(ctx.author.voice.channel.id==ctx.channel.id):
                         for mention in ctx.mentions:
