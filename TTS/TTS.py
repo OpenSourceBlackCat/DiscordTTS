@@ -1,7 +1,6 @@
 from discord.ext.commands import Bot
 from discord import Intents, FFmpegPCMAudio
 from emoji import distinct_emoji_list, demojize
-from urllib.request import urlretrieve
 from googletrans import Translator
 from dotenv import load_dotenv
 from re import sub, findall
@@ -62,7 +61,11 @@ class TTS:
             if(ctx.author.voice):
                 if(ctx.author.voice.channel.id==ctx.channel.id):
                     try:
-                        await TTS.talk(URL=f"{_SOUND_LIB}/{sound}.mp3")
+                        full_sound = sound.split(" ", 1)
+                        finalSound = full_sound[1].title().replace(" ", "")
+                        full_sound = full_sound[0].lower()
+                        await ctx.delete()
+                        await TTS.talk(URL=f"{_SOUND_LIB}/{full_sound}{finalSound}.mp3")
 
                     except Exception as e:
                         print("File Not Found", e)
