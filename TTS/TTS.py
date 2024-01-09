@@ -61,11 +61,11 @@ class TTS:
             if(ctx.author.voice):
                 if(ctx.author.voice.channel.id==ctx.channel.id):
                     try:
+                        await ctx.delete()
                         try:
                             full_sound = sound.split(" ", 1)
                             finalSound = full_sound[1].title().replace(" ", "")
                             full_sound = full_sound[0].lower()
-                            await ctx.delete()
                             await TTS.talk(URL=f"{_SOUND_LIB}/{full_sound}{finalSound}.mp3")
                         except:
                             await TTS.talk(URL=f"{_SOUND_LIB}/{sound}.mp3")
