@@ -90,8 +90,8 @@ class TTS:
                 if(_LAST_SPOKEN_USER==ctx.author.name):
                     await TTS.talk(text=ctx.content)
                 else:
-                    if(ctx.author.nick):
-                        await TTS.talk(text=f"{ctx.author.nick} Says {ctx.content}")
+                    if(ctx.author.nickname):
+                        await TTS.talk(text=f"{ctx.author.nickname} Says {ctx.content}")
                     else:
                         await TTS.talk(text=f"{ctx.author.name} Says {ctx.content}")
                 _LAST_SPOKEN_USER = ctx.author.name
